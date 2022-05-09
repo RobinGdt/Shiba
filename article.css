@@ -1,0 +1,14 @@
+.box{
+    border: 3px solid blue;
+    width: 500px;
+    text-align: center;
+    max-height: 300px;
+    background: white;
+    overflow: scroll;
+}
+
+body{
+    background-color: #1b2632;
+    color: black;
+    font-family: 'Helvetica';
+}
