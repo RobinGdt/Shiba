@@ -24,6 +24,7 @@ if(isset($_GET['id']) AND !empty($_GET['id'])) {
     if($article->rowCount() == 1 ) {
         $article = $article->fetch();
         $titre = $article['titre'];
+        $id = $article['id'];
         $contenu = $article['contenu'];
     } else {
         die('Cet article n\existe pas');
@@ -39,15 +40,18 @@ if(isset($_GET['id']) AND !empty($_GET['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="article.css">
+    <link rel="stylesheet" href="articles.css">
     <title>Accueil</title>
 </head>
 <body>
     <div class="box">
+        <img class="mini" src="miniatures/<?= $id ?>.jpg">
         <h1><?= $titre ?> </h1>
         <p><?= $contenu ?></p>
     </div>
-    <a href="index.php">Accueil -></a>
+    <a href="redaction.php?edit=<?= $a['id'] ?>"> | Modifier</a>
+    <a href="supprimer.php?id=<?= $a['id'] ?>"> | Supprimer</a>
+    <a href="index.php"> | Accueil -></a>
 
 </body>
 </html>

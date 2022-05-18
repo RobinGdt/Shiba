@@ -1,0 +1,77 @@
+body{
+    background-color: orange;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.post{
+    width: 50%;
+    background-color: white;
+    box-shadow:3px 3px 3px 3px rgba(0, 0, 0, 0.26);
+}
+.card{
+    background-color: white;
+    width: 100%;
+    height: auto;
+    text-align: center;
+    border-style: none none double  none;
+}
+.titre{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.contenu{
+    border-radius: 0;
+    width: 80%;
+    background-color: white;
+    margin-left: 10%;
+}
+.tools{
+    display: flex;
+    width: 100%;
+}
+ul{
+    display: flex;
+    color: rgb(0, 92, 128);
+}
+ul > *{
+    list-style-type: none;
+}
+a{
+    text-decoration: none;
+}
+
+li{
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+li > *{
+    font-size: 20px;
+    cursor: pointer;
+}
+li > a:hover{
+    font-size: 30px;
+}
+textarea{
+    resize: none;
+}
+img{
+    max-width: 100%;
+    max-height: 400px;
+}
+.comment_card{
+    width: 70%;
+    height: 150px;
+    /* border: 1px solid black; */
+    margin: 7px;
+    background-color: white;
+}
+.comment_bis{
+    width: 100%;
+    margin-top: 5px;
+    height: auto;
+
+}
+.comment_bis > input{
+    -webkit-appearance: none;
+}

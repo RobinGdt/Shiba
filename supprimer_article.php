@@ -19,9 +19,9 @@ $bdd = new PDO("$engine:host=$host:$port;dbname=$dbName",$username, $passeword);
 if(isset($_GET['id']) AND !empty($_GET['id'])) {
     $suppr_id = htmlspecialchars($_GET['id']);
     
-    $suppr = $bdd->prepare('DELETE FROM commentaire WHERE id = ?');
+    $suppr = $bdd->prepare('DELETE FROM article WHERE id = ?');
     $suppr->execute(array($suppr_id));
 
-    header('Location: http://localhost:8888/homepage.php?id=8 ');
+    header('Location: http://localhost:8888/commentaire.php?id=8 ');
 }    
 ?>
