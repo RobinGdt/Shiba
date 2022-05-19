@@ -3,22 +3,13 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Encode+Sans:wght@100&family=Jost:ital,wght@0,100;1,100&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style/inscription.css">
     <title>Inscription</title>
 </head>
 <body>
-
-    <div class="c1">
-        <div class="contentShiba">
-            <img src="assets/Shiba_Landing.png" alt="">
-        </div>
-    </div>
-
-
-    <div class="c2">
-        <div class="contentCo">
+<div class="login-form">
     <?php
         if(isset($_GET['reg_err']))
         {
@@ -77,27 +68,26 @@
             }
         }
     ?>
-    <h2>Pour créer son compte, c'est ici :</h2>
     <form action="inscription_traitement.php" method="post">
-
+        <h2>Inscription</h2>
+        <div class="form-group">
             <input type="text" name="pseudo" class="form-control" placeholder="Pseudo" required="required" autocomplete="off">
-
-
+        </div>
+        <div class="form-group">
             <input type="email" name="email" class="form-control" placeholder="Email" required="required" autocomplete="off">
-
-
+        </div>
+        <div class="form-group">
             <input type="password" name="password" class="form-control" placeholder="Mot de passe" required="required" autocomplete="off">
-
-
+        </div>
+        <div class="form-group">
             <input type="password" name="password_retype" class="form-control" placeholder="Re-tapez le mot de passe" required="required" autocomplete="off">
-
-            <div class="btn">
-                <button type="submit" class="btn">Inscription</button>
-            </div>
-
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn">Inscription</button>
+        </div>
     </form>
-    </div>
-    </div>
+</div>
+
 </body>
 <script src="main.js"></script>   
 </html>

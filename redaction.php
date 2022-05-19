@@ -30,23 +30,21 @@ if(isset($_GET['edit']) AND !empty($_GET['edit'])) {
 if(isset($_POST['article_contenu'])) {
     if(!empty($_POST['article_contenu'])) {
 
-        $article_titre = htmlspecialchars($_POST['article_titre']);
         $article_contenu = htmlspecialchars($_POST['article_contenu']);
 
         if($mode_edition == 0) {
 
-            var_dump($_FILES);
             $ins = $bdd->prepare('INSERT INTO article (token, contenu,
                 date_time_publication)VALUES (?, ?, NOW())');
-            $ins->execute(array($_SESSION['user'],$article_titre, $article_contenu));
+            $ins->execute(array($_SESSION['user'], $article_contenu));
             $lastid = $bdd->lastInsertId();
-            header('Location: http://localhost:8888/homepage.php?id='.$getid);
+            header('Location: http://localhost:8888/homepage.php?id='.$lastid);
             
 
 
             if (isset($_FILES['miniature']) and !empty($_FILES['miniature']['name'])) {
                 if (exif_imagetype($_FILES['miniature']['tmp_name']) == 2) {
-                    $chemin = 'miniatures/'.$lastid.'.jpg';
+                    $chemin = 'miniatures_articles/'.$lastid.'.jpg';
                     move_uploaded_file($_FILES['miniature']['tmp_name'],$chemin);
                 } else {
                     $message = 'votre image doit être au format jpg.';
@@ -56,7 +54,7 @@ if(isset($_POST['article_contenu'])) {
         } else {
             $update = $bdd->prepare('UPDATE article SET token = ?, titre = ?, contenu = ?,
                 date_time_edition = NOW() WHERE id = ?');
-            $update->execute(array($_SESSION['user'],$article_titre,$article_contenu,$edit_id));
+            $update->execute(array($_SESSION['user'],$article_contenu,$edit_id));
             header('Location: http://localhost:8888/homepage.php?id='.$edit_id);
             $message = 'Votre article a bien été mis à jour !';
         }
@@ -65,7 +63,8 @@ if(isset($_POST['article_contenu'])) {
         $message = 'Veuillez remplir tous les champs';
     }
 }    
-
+var_dump($_POST);
+var_dump($_FILES);
 ?>
 
 <!DOCTYPE html>
@@ -77,24 +76,9 @@ if(isset($_POST['article_contenu'])) {
     <title>Publication / Edition</title>
 </head>
 <body>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="text" name="article_titre" placeholder="titre" <?php if( 
-            $mode_edition) { ?> value="
-            <?= $edit_article['titre'] ?>"<?php } ?>></br>
-            <textarea name="article_contenu" placeholder="contenu de l'article"><?php if( 
-            $mode_edition == 1) { ?><?= 
-            $edit_article['contenu'] ?><?php }?></textarea></br>
-            <?php if($mode_edition == 0) { ?>
-            <input type="file" name="miniature"/></br>
-            <?php } ?>
-        <input type="submit" value="Envoyer l'article">
-    </form>
-    </br>
-    <?php if(isset($message)) { echo($message); } ?>
-</body>
-</html>
 
-            <form method="POST">
+
+            <form action="" method="post" enctype="multipart/form-data">
                 <div class="imagePP">
                     <img src="miniatures/<?= $user['token'] ?>/<?= $profile['ImgProfile'] ?>">
                 </div>    
@@ -104,7 +88,7 @@ if(isset($_POST['article_contenu'])) {
                 <?php if($mode_edition == 0) { ?>
                 <input type="file" class="inpImg" style="background-image: url(assets/icon_img.png); " value="ok" name="miniature"></br>
                 <?php } ?>
-             <a href="redaction.php"><input type="submit" value="Poster" name="submit_commentaire"><a/>
+             <input type="submit" value="Poster" name="submit_commentaire">
             </form>
 
             

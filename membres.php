@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $bdd = new PDO("mysql:host=localhost:8889;dbname=shiba_db", 'root', 'root'); 
+    require_once 'config.php'; 
 
 
     $afficher_membres = $bdd->prepare("SELECT * FROM users WHERE token != ? ORDER BY pseudo");
@@ -79,12 +79,12 @@
                 
             }else{
                 ?>
-                <p>Aucun utilisateur trouvÃ©</p>
+                <p>Aucun utilisateur trouvé</p>
                 <?php
             }  
         ?>
     </section>
-    <p><a href="landing.php">Retour</a></p>
+    <p><a href="homepage.php?id=42">Retour</a></p>
 
 
 </body>

@@ -16,7 +16,7 @@ if(isset($_GET['t'],$_GET['id']) AND !empty($_GET['t']) AND !empty($_GET['id']))
             $ins = $bdd->prepare('INSERT INTO dislikes (id_article) VALUES (?)');
             $ins->execute((array($getid)));
         }
-        header('Location: http://localhost:8888/commentaire.php?id='.$getid);
+        header('Location: http://localhost:8888/homepage.php?id='.$getid);
     }else{
         exit('Erreur fatale');
     }

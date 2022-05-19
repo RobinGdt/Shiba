@@ -1,13 +1,7 @@
 
 <?php
     session_start();                        // Démarrage de la session
-    $bdd = new PDO("mysql:host=localhost:8889;dbname=shiba_db", 'root', 'root');              // On inclut la connexion à la base de données
-
-    $getid = htmlspecialchars($_GET['id']);
-
-    $article = $bdd->prepare('SELECT * FROM article WHERE id = ? ');
-    $article->execute(array($getid));
-    $article = $article->fetch();
+    require_once 'config.php';              // On inclut la connexion à la base de données
 
     if(!empty($_POST['email']) && !empty($_POST['password']))     //On verifie si les données des inputs email et password existent
     {
@@ -32,11 +26,11 @@
                 {
                     // On créer la session et on redirige sur landing.php
                     $_SESSION['user'] = $data['token'];
-                    header('Location: redaction.php');
+                    header('Location: landing.php');
                     die();
                 }else{ header('Location: index_bis.php?login_err=password'); die(); }
 
-            }else{ header('Location: index_bis.php?id=8'); die(); }
+            }else{ header('Location: index_bis.php?login_err=email'); die(); }
 
         }else{ header('Location: index_bis.php?login_err=already'); die(); }
         

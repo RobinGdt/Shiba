@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $bdd = new PDO("mysql:host=localhost:8889;dbname=shiba_db", 'root', 'root');
+    require_once "config.php";
 
     $users_id = trim($_GET['token']);
     $req = $bdd->prepare('SELECT * FROM users WHERE token = ?');

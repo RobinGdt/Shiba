@@ -1,7 +1,7 @@
 
 <?php
     
-    $bdd = new PDO("mysql:host=localhost:8889;dbname=shiba_db", 'root', 'root');;      // On inclu la connexion à la bdd
+    require_once 'config.php';      // On inclu la connexion à la bdd
     
 
     //On vérifie que toutes les variables POST existent

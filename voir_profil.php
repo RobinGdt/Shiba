@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $bdd = new PDO("mysql:host=localhost:8889;dbname=shiba_db", 'root', 'root');
+    require_once 'config.php'; 
 
 
     $users_token = trim($_GET['token']);
@@ -55,7 +55,7 @@
     <h1>Profil de <strong><?= $show_users['pseudo'] ?> </strong></h1>
     <ul>
         <img src="<?php $token = $_GET['token']; $img = $show_users['ImgProfile']; if(isset($img)): echo "users/$token/$img"  ?> <?php else: echo "users/photo-avatar-profil.png" ?> <?php endif; ?>" height="200">
-        <img src="<?php $token = $_GET['token']; $img = $show_users['ImgBanner']; if(isset($img)): echo "users/$token/$img"  ?> <?php else: echo "users/BanniÃ¨re-blanche.jpg" ?> <?php endif; ?>" width="800", height="200">
+        <img src="<?php $token = $_GET['token']; $img = $show_users['ImgBanner']; if(isset($img)): echo "users/$token/$img"  ?> <?php else: echo "users/Bannière-blanche.jpg" ?> <?php endif; ?>" width="800", height="200">
         <li>Nom : <?php if(!empty($show_users['name'])): echo $show_users['name'] ?> <?php else: echo "Aucune information..." ?> <?php endif; ?></li>
         <li>lastname : <?php if(!empty($show_users['lastname'])): echo $show_users['lastname'] ?> <?php else: echo "Aucune information..." ?> <?php endif; ?></li>
         <li>pseudo : <?php if(!empty($show_users['pseudo'])): echo $show_users['pseudo'] ?> <?php else: echo "Aucune information..." ?> <?php endif; ?></li>

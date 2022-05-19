@@ -11,6 +11,9 @@ body{
     /* border: 1px solid white; */
     width: 30%;
     height: 98vh;
+    position: fixed;
+    left: 0;
+    width: 20%;
 }
 .profil{
     height: 100px;
@@ -107,6 +110,8 @@ h1{
     /* border: 1px solid white; */
     width: 100%;
     height: auto;
+    display: flex;
+    justify-content: center;
 }
 .imagePP{
     width: 70px;
@@ -116,7 +121,7 @@ h1{
     overflow: hidden;
 }
 .article{
-    width: 50.46%;
+    width: 41.46%;
     height: 100px;
     background-color: white;
     border-radius: 0 0 17px 17px;
@@ -150,7 +155,6 @@ h1{
     cursor: pointer;
 }
 .article > form > .inpImg{
-    background-image: url(assets/icon_img.png);
     width: 50px;
     height: 50px;
     /* border: 1px solid black; */
@@ -161,8 +165,8 @@ h1{
     }
 .content{
     /* border: 1px solid white; */
-    width: 100%;
-    height: 98vh;
+    width: 50%;
+    height: auto;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -173,12 +177,10 @@ h1{
 }
 .post{
     width: 83%;
-    height: auto;
+    max-height: 950px;
     border: 1px solid white;
     border-radius: 17px 17px 17px 17px;
-    /* background-color: rgb(243, 241, 241); */
     background-color: white;
-    /* margin-top: 30px; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -187,11 +189,17 @@ h1{
     margin-top: 120px;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.116);
 }
+.post > .card > .titlecard > img{
+    margin-right: 8%;
+}
 
-.post > .card > h3{
+.post > .card > .titlecard{
     width: 50%;
     display: flex;
+    align-items: center;
     justify-content: flex-start;
+    font-size: 20px;
+    height: 8%;
 }
 .imgPost{
     width: 40px;
@@ -230,14 +238,30 @@ li{
     display: flex;
     align-items: center;
 }
-.comment{
-    background-color: #1B1B1B;
+.formcomment{
     display: flex;
     justify-content: center;
+}
+.formcomment > textarea{
+    border-radius: 20px;
+}
+.formcomment > input{
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+.commentcard{
+    background: white;
+}
+.comment{
+    background-color: blanchedalmond;
+    display: flex;
+    justify-content: flex-start;
     flex-direction: column;
     width: 83%;
-    height: 30px;
-    margin-top: 120px;
+    height: 25%;
+    overflow: scroll;
+    /* margin-top: 120px; */
 }
 .react{
     display: flex;
@@ -253,8 +277,10 @@ textarea{
 
 .colonne3{
     /* border: 1px solid black; */
-    width: 35%;
+    width: 19%;
     height: 98vh;
+    position: fixed;
+    right: 0;
 }
 
 /* search */

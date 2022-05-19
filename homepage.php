@@ -33,13 +33,12 @@ if (isset($_GET['id']) and !empty($_GET['id'])) {
     $dislikes = $dislikes->rowCount();
 
     if (isset($_POST['submit_commentaire'])) {
-        if (isset($_POST['pseudo'], $_POST['comment']) and !empty($_POST['pseudo']) and !empty($_POST['comment'])) {
-            $pseudo = htmlspecialchars(($_POST['pseudo']));
+        if (isset($_POST['comment']) and !empty($_POST['comment'])) {
             $commentaire = htmlspecialchars($_POST['comment']);
             if (strlen($pseudo) < 25) {
 
-                $ins = $bdd->prepare('INSERT INTO commentaire (pseudo, commentaires, id_article) VALUES (?,?,?)');
-                $ins->execute(array($pseudo, $commentaire, $getid));
+                $ins = $bdd->prepare('INSERT INTO commentaire (commentaires, id_article) VALUES (?,?)');
+                $ins->execute(array($commentaire, $getid));
                 $c_msg = "<span style='color:green'>Votre commentaire a bien été posté</span><br />";
             } else {
                 $c_msg = "Erreur: Le pseudo doit faire maximum 25 caractères";
@@ -49,17 +48,25 @@ if (isset($_GET['id']) and !empty($_GET['id'])) {
         }
     }
 
-    // if (isset($_POST['repondre'])) {
-    //     if (isset($_POST['reponse']) and !empty($_POST['reponse'])) {
-    //         $commentaire_bis = htmlspecialchars($_POST['reponse']);
+    $r_commentaires = $bdd->prepare('SELECT * FROM reponse WHERE id = ?');
+    $r_commentaires->execute(array($getid));
 
-    //             $ins = $bdd->prepare('INSERT INTO commentaire (reponse, id_article) VALUES (?,?)');
-    //             $ins->execute(array($commentaire_bis, $getid));
-    //             $c_msg = "<span style='color:green'>Votre réponse a bien été postée</span><br />";
-    //     } else {
-    //         $c_msg = "Erreur: Tous les champs doivent être complétés ";
-    //     }
-    // }
+
+    if (isset($_POST['repondre'])) {
+        if (isset($_POST['reponse']) and !empty($_POST['reponse'])) {
+            $commentaire_bis = htmlspecialchars($_POST['reponse']);
+            
+            $id_commentaires = $bdd->prepare('SELECT id FROM commentaire WHERE id_article = ?');
+            $id_commentaires->execute(array($getid));
+            $id_commentaires = $id_commentaires->fetch();
+            
+                $ins = $bdd->prepare('INSERT INTO reponse (id, contenu, id_commentaire, id_article) VALUES (?,?,?,?)');
+                $ins->execute(array($commentaire_bis, $id_commentaires, $getid));
+                $c_msg = "<span style='color:green'>Votre réponse a bien été postée</span><br />";
+        } else {
+            $c_msg = "Erreur: Tous les champs doivent être complétés ";
+        }
+    }
 
     $commentaires = $bdd->prepare('SELECT * FROM commentaire WHERE id_article = ? ORDER BY id DESC');
     $commentaires->execute(array($getid));
@@ -96,6 +103,12 @@ if (isset($_GET['id']) and !empty($_GET['id'])) {
         $insertMessage = $bdd->prepare("INSERT INTO message(message,  id_receveur, id_envoyeur)VALUES(?, ?, ?)");
         $insertMessage->execute(array($message,$users_id,$data['id']));
     }
+
+    if(isset($_POST['Poster'])){
+        $afficher = 'tout est bon';
+    }else{
+        $afficher_error = 'ça craint';
+    }
 ?>
 
     <meta charset="utf-8" />
@@ -112,6 +125,9 @@ if (isset($_GET['id']) and !empty($_GET['id'])) {
             <div class="accueil"><a href="landing.php">accueil</a><image src="assets/shiba_network.png"></image></div>
             <div class="notifications"><a href="landing.php">notifications </a><image src="assets/cloche.png"></image></div>
             <div class="profil_a"><a href="profil.php">profil </a> <image src="assets/profil.png"></image></div>
+            <div class="profil_a"><a href="membres.php">membres </a> <image src="assets/profil.png"></image></div>
+            <div class="profil_a"><a href="pages.php">pages </a> <image src="assets/profil.png"></image></div>
+            <div class="profil_a"><a href="logout.php">deconnexion</a></image></div>
         </div>
 
         <div class="tools">
@@ -129,7 +145,7 @@ if (isset($_GET['id']) and !empty($_GET['id'])) {
         <div class="article">
 
 
-            <form method="POST">
+            <form action="redaction.php" method="post" enctype="multipart/form-data">
                 <div class="imagePP">
                     <img src="miniatures/<?= $user['token'] ?>/<?= $profile['ImgProfile'] ?>">
                 </div>    
@@ -137,65 +153,65 @@ if (isset($_GET['id']) and !empty($_GET['id'])) {
                 <?php if($mode_edition == 0) { ?>
                 <input type="file" class="inpImg" style="background-image: url(assets/icon_img.png); " value="ok" name="miniature"></br>
                 <?php } ?>
-             <a href="redaction.php"><input type="submit" value="Poster"><a/>
+             <input type="submit" value="Poster">
             </form>
-
-
-
-            <!--<form method="POST">
-                <div class="imagePP">
-                    <img src="miniatures//">
-                </div>    
-                <textarea class="post_article" name="comment" placeholder="Votre post..."></textarea></br>
-                <input type="file" class="inpImg" style="background-image: url(assets/icon_img.png); " value="ok" name="miniature">
-                <a href="redaction.php"><input type="submit" value="Poster" name="submit_commentaire"><a/>
-            </form>-->
+                
         </div>
 
             <div class="post">
                 <div class="card">
-                    <h3>
-                        <img class="imgPost" src="miniatures/<?= $user['token'] ?>/<?= $profile['ImgProfile'] ?>"><?= $user['pseudo']?>
-                    </h3>
+                    <div class="titlecard">
+                        <img class="imgPost" src="miniatures/<?= $user['token'] ?>/<?= $profile['ImgProfile'] ?>">
+                        <h3><?= $user['pseudo']?></h3>
+                    </div>
+
                     <div class="contentArticle">
                         <div class="image">
-                            <img src="miniatures/<?= $getid ?>.jpg">
+                            <img src="miniatures_articles/<?= $getid ?>.jpg">
                         </div>
                         <div class="contenu">
                            <p> <?= $article['contenu'] ?> </p>
                         </div>
                         <div class="actions">
                             <ul>
-                                <li><a href="">
+                                <li><a href="php/action.php?t=1like&id=<?= $article['id'] ?>">
                                         <p>&#128077;</p>
                                     </a>(<?= $likes ?>)</li>
-                                <li><a href="">
+                                <li><a href="php/action.php?t=2dislike&id=<?= $article['id'] ?>">
                                         <p>&#128078;</p>
                                     </a>(<?= $dislikes ?>)</li>
                             </ul>
                         </div>
+                        <form class="formcomment" method="POST"> 
+
+                            <textarea class="post_article" name="comment" placeholder="Votre commentaire..."></textarea></br>
+                            <input type="submit" value="Poster" name="submit_commentaire">
+                        </form>
                     </div>
                 </div>
-
-            </div>
-            <?php while ($c = $commentaires->fetch()) { ?>
                 <div class="comment">
+            <?php while ($c = $commentaires->fetch()) { ?>
                     <?= $c['date_time_comment'] ?><br />
-                    <b><?= $c['pseudo'] ?> :</b> <?= $c['commentaires'] ?>
+                    <b><?= $user['pseudo'] ?> :</b> <?= $c['commentaires'] ?>
                     <div class="react">
                         <a href="supprimer.php?id=<?= $c['id'] ?>"> Supprimer <?= $c['id'] ?></a><br />
                         <a href="php/action_com.php?t=1like&id=<?= $article['id'] ?>">&#128077;</a>(<?= $likescom ?>)
                         <a href="php/action_com.php?t=2dislike&id=<?= $article['id'] ?>">&#128078;</a>(<?= $dislikescom ?>)<br />
                     </div>
-                    Réponse de: <b><?= $c['pseudo'] ?> :</b> <?= $c['reponse'] ?>
+                    <?php foreach($r_commentaires as $rc):?>
+                        Réponse de: <b><?= $rc['pseudo'] ?> :</b> <?= $rc['reponse'] ?>
 
-                    <form method="POST" class="comment_bis">
-                        <textarea class="comment_bis" name="reponse" placeholder="Répondre"></textarea>
-                        <a href="php/reponse.php?id=<?= $com['id'] ?>"><input type="submit" value="Poster" name="repondre"></a>
-                    </form><br />
+                        <form method="POST" class="comment_bis">
+                            <textarea class="comment_bis" name="reponse" placeholder="Répondre"></textarea>
+                            <a href="php/reponse.php?id=<?= $com['id'] ?>"><input type="submit" value="Poster" name="repondre"></a>
+                        </form><br />
+                    <?php endforeach; ?>
 
                 <?php } ?>
                 </div>
+            </div>
+    
+        </div>
         </div>
 
     </div>

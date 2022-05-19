@@ -1,7 +1,6 @@
 <?php
     session_start();
-    $bdd = new PDO("mysql:host=localhost:8889;dbname=shiba_db", 'root', 'root');
-
+    require_once 'config.php';
 
     $req = $bdd->prepare('SELECT name, lastname, age, pseudo, tokenID, gender, birthday, phone, ImgProfile, ImgBanner, email, date_inscription, token FROM profiles INNER JOIN users WHERE tokenID = ? AND token = ?');
     $req->execute(array($_SESSION['user'], $_SESSION['user']));
@@ -9,9 +8,10 @@
     $data = $req->fetch();
 
     // variables téléchargement image profil & bannière
-    $Maxsize = 6291456;
+
+    $Maxsize = 6291456; // 6Mo
     $ExtensionImg = array('image/png', 'image/jpeg', 'image/gif', 'image/png');
-    $path = "miniatures/" . $_SESSION['user'];
+    $path = "users/" . $_SESSION['user'];
 
     if (isset($_FILES['image_user']) AND !empty($_FILES['image_user']['name'])) {
 
@@ -19,8 +19,6 @@
 
             if(in_array($_FILES['image_user']['type'], $ExtensionImg)) {
                 
-                
-
                 if(!is_dir($path)) {
                     mkdir($path);
                 };
@@ -79,25 +77,31 @@
 
     if (isset($_POST["ChangeProfile"])) {
 
-        $name = $_POST['name_user'];
-        $lastname = $_POST['lastname_user'];
-        $age = $_POST['age_user'];
-        $gender = $_POST['gender_user'];
-        $birthday = $_POST['birthday_user'];
-        $phone = $_POST['tel_user'];
+        $name = htmlspecialchars($_POST['name_user']);
+        $lastname = htmlspecialchars($_POST['lastname_user']);
+        $age = htmlspecialchars($_POST['age_user']);
+        $gender = htmlspecialchars($_POST['gender_user']);
+        $birthday = htmlspecialchars($_POST['birthday_user']);
+        $phone = htmlspecialchars($_POST['tel_user']);
+
+        if($name AND $lastname AND $age AND $gender AND $birthday AND $phone) {
+            $sqlUpdate = $bdd->prepare('UPDATE profiles SET name = :name, lastname = :lastname, age = :age, gender = :gender, birthday = :birthday, phone = :phone WHERE tokenID = :token');
+            $sqlUpdate->execute((array(
+                "name" => $name,
+                "lastname" => $lastname,
+                "age" => $age,
+                "token" => $_SESSION['user'],
+                "gender" => $gender,
+                "birthday" => $birthday,
+                "phone" => $phone
+            )));
+            header('Location: landing.php');
+        } else {
+            $msg = "Veuillez remplir tous les champs !";
+        }
 
     
-        $sqlUpdate = $bdd->prepare('UPDATE profiles SET name = :name, lastname = :lastname, age = :age, gender = :gender, birthday = :birthday, phone = :phone WHERE tokenID = :token');
-        $sqlUpdate->execute((array(
-            "name" => $name,
-            "lastname" => $lastname,
-            "age" => $age,
-            "token" => $_SESSION['user'],
-            "gender" => $gender,
-            "birthday" => $birthday,
-            "phone" => $phone
-        )));
-        header('Location: homepage.php?id=8');
+
     };
 
     if (isset($_POST['DeleteAccount'])) {
@@ -105,7 +109,7 @@
         $sqlDelete->execute(array(
             $_SESSION['user']
         ));
-        header('Location: index_bis.php');
+        //header('Location: index.php');
     }
 ?>
 <!DOCTYPE html>
@@ -118,8 +122,8 @@
 </head>
 <body>
 <h1>Profil de <?php echo $data['pseudo'] ?> :</h1>
-<img src="<?php $token = $_SESSION['user']; $img = $data['ImgProfile']; if(isset($img)): echo "users/$token/$img"  ?> <?php else: echo "miniatures/photo-avatar-profil.png" ?> <?php endif; ?>" height="200">
-<img src="<?php $token = $_SESSION['user']; $img = $data['ImgBanner']; if(isset($img)): echo "users/$token/$img"  ?> <?php else: echo "miniatures/Bannière-blanche.jpg" ?> <?php endif; ?>" width="800", height="200">
+<img src="<?php $token = $_SESSION['user']; $img = $data['ImgProfile']; if(isset($img)): echo "users/$token/$img"  ?> <?php else: echo "users/photo-avatar-profil.png" ?> <?php endif; ?>" height="200">
+<img src="<?php $token = $_SESSION['user']; $img = $data['ImgBanner']; if(isset($img)): echo "users/$token/$img"  ?> <?php else: echo "users/Bannière-blanche.jpg" ?> <?php endif; ?>" width="800", height="200">
     <form action="" method="post" enctype="multipart/form-data">
         <p>Image de profil : <input type="file" name="image_user"></p>        
         <p>Image de la bannière : <input type="file" name="image_banner"></p>        
@@ -146,7 +150,8 @@
         <input type="submit" value="Supprimer son compte", name="DeleteAccount">
     </form>
     
+    <p><b><?php echo $msg ?></b></p>
     <p><a href="landing.php">Retour</a></p>
-    <?php var_dump($_SESSION['user']) ?>
+    
 </body>
 </html>

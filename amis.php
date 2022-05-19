@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $bdd = new PDO("mysql:host=localhost:8889;dbname=shiba_db", 'root', 'root');
+    require_once 'config.php'; 
 
     $req1 = $bdd->prepare("SELECT tokenID, tokenFriend  FROM friends WHERE tokenID = ?");
     $req1->execute(array($_SESSION['user']));
@@ -37,6 +37,7 @@
         } else {
             $delete_friend = $bdd->prepare('DELETE FROM friends WHERE tokenID = ? AND tokenFriend = ?');
             $delete_friend->execute(array($_SESSION['user'], $friend));
+            header("Refresh:0");
         };
     };
 ?>
@@ -64,9 +65,8 @@
                         <a href="voir_profil.php?token=<?= $friend['tokenFriend'] ?>">Voir</a>
                         <a href="message.php?token=<?= $friend['tokenFriend'] ?>">Message</a>
                         <form method="POST">
-                            <input type="submit" name="<?= $friend['tokenFriend'] ?>" value="<?php $Friend_InTable = ValueInput($bdd, $friend['tokenFriend']); if($Friend_InTable < 1): echo "Ajouter" ?> <?php else: echo "supprimer" ?> <?php endif ?>">
-                        </form> 
-       
+                            <input type="submit" name="<?= $friend['tokenFriend'] ?>" value="<?php $Friend_InTable = ValueInput($bdd, $friend['tokenFriend']); if($Friend_InTable < 0): echo "Ajouter" ?> <?php else: echo "supprimer"; ?> <?php endif ?>">
+                        </form>
                     </div>
                     <?php } ?>
                     <?php
